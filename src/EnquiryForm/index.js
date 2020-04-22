@@ -66,9 +66,15 @@ class EnquiryForm extends React.Component {
         let temp={"customerName":this.state.customerName,"gender":this.state.gender,"phoneNumber":this.state.phoneNumber
             ,"customerID":this.state.customerID};
         let dataCopy=this.state.data;
-        dataCopy.push(temp);
-        console.log(dataCopy);
+        if(localStorage.getItem('userData')===null){
+            dataCopy=this.state.data;
+        }
+        else{
+            dataCopy=JSON.parse(localStorage.getItem('userData'))
+        }
 
+        dataCopy.push(temp);
+        localStorage.setItem('userData',JSON.stringify(dataCopy));
         this.setState({
             data:dataCopy
         });
