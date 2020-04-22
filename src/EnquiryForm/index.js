@@ -5,12 +5,16 @@ import { Select } from '@material-ui/core';
 import { MenuItem } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { CircularProgress} from '@material-ui/core';
+import SimpleTable from "../Table";
 class EnquiryForm extends React.Component {
     state = {
         customerName: '',
         gender:"Male",
         phoneNumber:'',
         isLoading:false,
+        customerID:'',
+        postRequestMade:false,
+        data:[],
     };
 
     constructor(props) {
@@ -19,7 +23,6 @@ class EnquiryForm extends React.Component {
         // this.handleGenderChange = this.handleGenderChange.bind(this);
         // this.handlephoneNumber = this.handlephoneNumber.bind(this);
         this.handleInputChange=this.handleInputChange.bind(this);
-
     }
 
 
@@ -45,6 +48,7 @@ class EnquiryForm extends React.Component {
     async makePostRequest() {
         this.setState({
             isLoading:true,
+            postRequestMade:true,
         });
        console.log("making request");
        const requestOptions = {
@@ -52,12 +56,23 @@ class EnquiryForm extends React.Component {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(this.state)
         };
-        const response = await fetch('https://jsonplaceholder.typicode.com/posts', requestOptions);
+        const response = await fetch('https://cors-anywhere.herokuapp.com/https://us-central1-form-manager-7234f.cloudfunctions.net/saveCustomer', requestOptions);
         const data = await response.json();
         console.log(data);
         this.setState({
             isLoading:false,
+            customerID:data["customerID"],
         });
+        let temp={"customerName":this.state.customerName,"gender":this.state.gender,"phoneNumber":this.state.phoneNumber
+            ,"customerID":this.state.customerID};
+        let dataCopy=this.state.data;
+        dataCopy.push(temp);
+        console.log(dataCopy);
+
+        this.setState({
+            data:dataCopy
+        });
+
     }
 
     render() {
@@ -73,21 +88,18 @@ class EnquiryForm extends React.Component {
                             <MenuItem value="Male">Male</MenuItem>
                             <MenuItem value="Female">Female</MenuItem>
                         </Select>
-
                     </div>
                     <div>
-
                         <Input placeholder="Phone Number"  type="number" name="phoneNumber" value={this.state.phoneNumber} onChange={this.handleInputChange}/>
-
                     </div>
-
                 </form>
                 <Button onClick={()=>{this.makePostRequest()}}>Save Info</Button>
                 <div>
                     { this.state.isLoading?<CircularProgress />:<div></div>}
                 </div>
-
-
+                 <div>
+                     <SimpleTable data={this.state.data}/>
+                 </div>
             </div>
         );
     }
