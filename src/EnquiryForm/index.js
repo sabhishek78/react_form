@@ -6,6 +6,7 @@ import { MenuItem } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { CircularProgress} from '@material-ui/core';
 import SimpleTable from "../Table";
+import ShowSnackBar from "../SnackBar";
 class EnquiryForm extends React.Component {
     state = {
         customerName: '',
@@ -64,13 +65,17 @@ class EnquiryForm extends React.Component {
 
     }
     deleteUser=(customerID)=>{
+        console.log("deleting user...");
+        console.log(customerID);
        let  dataCopy=this.state.data.slice();
+       console.log(dataCopy);
        let newData=[];
        for(let i=0;i<dataCopy.length;i++){
            if(dataCopy[i]['customerID']!==customerID){
              newData.push(dataCopy[i]);
            }
        }
+       console.log(newData);
         this.setState({
             data:newData
         });
@@ -101,7 +106,9 @@ class EnquiryForm extends React.Component {
                 <div>
                     {(this.state.data.length!==0)&&<SimpleTable data={this.state.data} deleteUser={this.deleteUser}/>}
                 </div>
-
+                <div>
+                    <ShowSnackBar/>
+                </div>
             </div>
         );
     }
