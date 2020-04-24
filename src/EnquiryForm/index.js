@@ -16,30 +16,18 @@ class EnquiryForm extends React.Component {
         postRequestMade:false,
         data:[],
     };
-
+    componentDidMount() {
+        let data=JSON.parse(localStorage.getItem('userData'));
+        if(data!==null){
+            this.setState({
+                data:data
+            });
+        }
+    }
     constructor(props) {
         super(props);
-        // this.handelNameChange = this.handelNameChange.bind(this);
-        // this.handleGenderChange = this.handleGenderChange.bind(this);
-        // this.handlephoneNumber = this.handlephoneNumber.bind(this);
         this.handleInputChange=this.handleInputChange.bind(this);
     }
-
-
-    // handelNameChange(event) {
-    //     this.setState({
-    //         customerName: event.target.value
-    //     });
-    // }
-    // handleGenderChange(event){
-    //     this.setState({
-    //         gender: event.target.value
-    //     });
-    // }
-    // handlePhoneNumber(event) {
-    //     const value = event.target.value.replace(/\+|-/ig, '');
-    //     this.setState({phoneNumber: value});
-    // }
     handleInputChange(event){
         this.setState({
             [event.target.name]:event.target.value
@@ -57,28 +45,35 @@ class EnquiryForm extends React.Component {
             body: JSON.stringify(this.state)
         };
         const response = await fetch('https://cors-anywhere.herokuapp.com/https://us-central1-form-manager-7234f.cloudfunctions.net/saveCustomer', requestOptions);
-        const data = await response.json();
-        console.log(data);
+        const responseJSON = await response.json();
+        console.log('responseJSON='+responseJSON);
         this.setState({
             isLoading:false,
-            customerID:data["customerID"],
         });
-        let temp={"customerName":this.state.customerName,"gender":this.state.gender,"phoneNumber":this.state.phoneNumber
-            ,"customerID":this.state.customerID};
-        let dataCopy=this.state.data;
-        if(localStorage.getItem('userData')===null){
-            dataCopy=this.state.data;
-        }
-        else{
-            dataCopy=JSON.parse(localStorage.getItem('userData'))
-        }
-
-        dataCopy.push(temp);
+        let currentUserData={"customerName":this.state.customerName,"gender":this.state.gender,"phoneNumber":this.state.phoneNumber
+            ,"customerID":responseJSON['customerID']};
+        console.log("current user data="+currentUserData);
+       let dataCopy=this.state.data.slice();
+        console.log(" previous data local storage="+dataCopy);
+        dataCopy.push(currentUserData);
+        console.log(" updated data local storage="+dataCopy);
         localStorage.setItem('userData',JSON.stringify(dataCopy));
         this.setState({
             data:dataCopy
         });
 
+    }
+    deleteUser=(customerID)=>{
+       let  dataCopy=this.state.data.slice();
+       let newData=[];
+       for(let i=0;i<dataCopy.length;i++){
+           if(dataCopy[i]['customerID']!==customerID){
+             newData.push(dataCopy[i]);
+           }
+       }
+        this.setState({
+            data:newData
+        });
     }
 
     render() {
@@ -103,9 +98,10 @@ class EnquiryForm extends React.Component {
                 <div>
                     { this.state.isLoading?<CircularProgress />:<div></div>}
                 </div>
-                 <div>
-                     <SimpleTable data={this.state.data} deleteData={(index) => {}}/>
-                 </div>
+                <div>
+                    {(this.state.data.length!==0)&&<SimpleTable data={this.state.data} deleteUser={this.deleteUser}/>}
+                </div>
+
             </div>
         );
     }

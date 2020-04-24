@@ -39,7 +39,7 @@ export default function SimpleTable(props) {
                             <TableCell align="right">{item.customerName}</TableCell>
                             <TableCell align="right">{item.gender}</TableCell>
                             <TableCell align="right">{item.phoneNumber}</TableCell>
-                            <TableCell align="right"><button name='Delete'onClick={()=>console.log(item.customerID)}> <DeleteIcon /> </button></TableCell>
+                            <TableCell align="right"><button name='Delete'onClick={()=>props.deleteUser(item.customerID)}> <DeleteIcon /> </button></TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
