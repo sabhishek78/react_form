@@ -104,7 +104,7 @@ class EnquiryForm extends React.Component {
                     { this.state.isLoading?<CircularProgress />:<div></div>}
                 </div>
                  <div>
-                     <SimpleTable data={this.state.data}/>
+                     <SimpleTable data={this.state.data} deleteData={(index) => {}}/>
                  </div>
             </div>
         );

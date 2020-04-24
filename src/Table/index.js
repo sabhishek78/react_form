@@ -7,6 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles({
     table: {
@@ -28,6 +29,7 @@ export default function SimpleTable(props) {
                         <TableCell align="right">Name</TableCell>
                         <TableCell align="right">Gender</TableCell>
                         <TableCell align="right">PhoneNumber</TableCell>
+                        <TableCell align="right">Remove</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -37,6 +39,7 @@ export default function SimpleTable(props) {
                             <TableCell align="right">{item.customerName}</TableCell>
                             <TableCell align="right">{item.gender}</TableCell>
                             <TableCell align="right">{item.phoneNumber}</TableCell>
+                            <TableCell align="right"><button name='Delete'onClick={()=>console.log(item.customerID)}> <DeleteIcon /> </button></TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
