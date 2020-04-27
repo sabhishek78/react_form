@@ -44,8 +44,43 @@ class EnquiryForm extends React.Component {
         this.setState({
             [event.target.name]:event.target.value
         })
+
+
+    }
+     allLetter(inputtxt)
+    {   console.log(inputtxt);
+        var lettersArray = ("ABCDEFGHIJKLMNOPQRSTUVWXYZ ").split("");
+        console.log(lettersArray);
+        for(let i=0;i<inputtxt.length;i++){
+            if(lettersArray.indexOf(inputtxt[i].toUpperCase())===-1){
+                console.log('Not Found='+inputtxt[i]);
+                return false;
+            }
+        }
+        console.log("valid name");
+        return true;
+    }
+     phonenumber(inputtxt)
+    {
+        var numbersArray = ("0123456789").split("");
+        for(let i=0;i<inputtxt.length;i++){
+            if(numbersArray.indexOf(inputtxt[i])===-1){
+                return false;
+            }
+        }
+        return true;
     }
     async makePostRequest() {
+        if(!(this.allLetter(this.state.customerName))){
+            console.log("invalid name");
+
+            return;
+        }
+        if(!(this.phonenumber(this.state.phoneNumber))){
+            console.log("invalid phone number")
+            return;
+        }
+
         this.setState({
             isLoading:true,
             postRequestMade:true,
