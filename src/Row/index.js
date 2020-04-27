@@ -20,8 +20,9 @@ class Row extends React.Component {
                     this.setState({deletePressed:true})
                     setTimeout(() => {
                         this.props.deleteUser(this.props.rowData.customerID);
-                        this.setState({deletePressed:false})
-                    }, 3000);
+                        // this.setState({deletePressed:false});
+                        }, 3000);
+
 
                 }}> {this.state.deletePressed?<CircularProgress/>: <DeleteIcon/>} </button></TableCell>
             </TableRow>

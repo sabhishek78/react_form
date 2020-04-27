@@ -5,8 +5,15 @@ import { Select } from '@material-ui/core';
 import { MenuItem } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { CircularProgress} from '@material-ui/core';
+
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import SimpleTable from "../Table";
-import ShowSnackBar from "../SnackBar";
+const baseURL = 'https://cors-anywhere.herokuapp.com/';
+const saveURL = baseURL + 'https://us-central1-form-manager-7234f.cloudfunctions.net/saveCustomer';
+const deleteURL = baseURL + 'https://us-central1-form-manager-7234f.cloudfunctions.net/deleteCustomer';
+const undoDeleteURL = baseURL + 'https://us-central1-form-manager-7234f.cloudfunctions.net/undoDeleteCustomer';
 class EnquiryForm extends React.Component {
     state = {
         customerName: '',
@@ -16,6 +23,10 @@ class EnquiryForm extends React.Component {
         customerID:'',
         postRequestMade:false,
         data:[],
+        openSnackBar:false,
+        deletedCustomer:[],
+        deletedCustomerID:'',
+        deletedCustomerIDIndex:'',
     };
     componentDidMount() {
         let data=JSON.parse(localStorage.getItem('userData'));
@@ -45,9 +56,9 @@ class EnquiryForm extends React.Component {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(this.state)
         };
-        const response = await fetch('https://cors-anywhere.herokuapp.com/https://us-central1-form-manager-7234f.cloudfunctions.net/saveCustomer', requestOptions);
+        const response = await fetch(saveURL, requestOptions);
         const responseJSON = await response.json();
-        console.log('responseJSON='+responseJSON);
+        console.log(responseJSON);
         this.setState({
             isLoading:false,
         });
@@ -64,7 +75,21 @@ class EnquiryForm extends React.Component {
         });
 
     }
-    deleteUser=(customerID)=>{
+      deleteUser=async (customerID)=>{
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({customerID: customerID})
+        };
+        const response = await fetch(deleteURL, requestOptions);
+        const responseJSON = await response.json();
+        console.log('delete response=');
+        console.log(responseJSON);
+        this.setState({
+            openSnackBar:true,
+            deletedCustomerID:customerID,
+
+        })
         console.log("deleting user...");
         console.log(customerID);
        let  dataCopy=this.state.data.slice();
@@ -74,13 +99,48 @@ class EnquiryForm extends React.Component {
            if(dataCopy[i]['customerID']!==customerID){
              newData.push(dataCopy[i]);
            }
+           else if(dataCopy[i]['customerID']===customerID){
+               let deletedData=dataCopy[i];
+               this.setState({
+                   deletedCustomerIDIndex:i,
+                   deletedCustomer:deletedData,
+               })
+           }
+
        }
+          localStorage.setItem('userData',JSON.stringify(newData));
        console.log(newData);
         this.setState({
             data:newData
         });
     }
-
+    undoDelete=async()=>{
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({customerID: this.state.deletedCustomerID})
+        };
+        const response = await fetch(undoDeleteURL, requestOptions);
+        const responseJSON = await response.json();
+        console.log('Undodelete response=');
+        console.log(responseJSON);
+        let  dataCopy=this.state.data.slice();
+        console.log("data before undo="+dataCopy);
+        dataCopy.splice(this.state.deletedCustomerIDIndex,0,this.state.deletedCustomer);
+        console.log("data after undo="+dataCopy);
+        localStorage.setItem('userData',JSON.stringify(dataCopy));
+        this.setState({
+            data:dataCopy,
+        });
+    }
+     handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+         this.setState({
+             openSnackBar:false,
+         })
+    }
     render() {
         return (
             <div>
@@ -106,9 +166,26 @@ class EnquiryForm extends React.Component {
                 <div>
                     {(this.state.data.length!==0)&&<SimpleTable data={this.state.data} deleteUser={this.deleteUser}/>}
                 </div>
-                <div>
-                    <ShowSnackBar/>
-                </div>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.openSnackBar}
+                    autoHideDuration={6000}
+                    onClose={this.handleClose}
+                    message="User Deleted "
+                    action={
+                        <React.Fragment>
+                            <Button color="secondary" size="small" onClick={this.undoDelete}>
+                                UNDO
+                            </Button>
+                            <IconButton size="small" aria-label="close" color="inherit" onClick={this.handleClose}>
+                                <CloseIcon fontSize="small" />
+                            </IconButton>
+                        </React.Fragment>
+                    }
+                />
             </div>
         );
     }
