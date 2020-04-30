@@ -10,10 +10,14 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import SimpleTable from "../Table";
-const baseURL = 'https://cors-anywhere.herokuapp.com/';
-const saveURL = baseURL + 'https://us-central1-form-manager-7234f.cloudfunctions.net/saveCustomer';
-const deleteURL = baseURL + 'https://us-central1-form-manager-7234f.cloudfunctions.net/deleteCustomer';
-const undoDeleteURL = baseURL + 'https://us-central1-form-manager-7234f.cloudfunctions.net/undoDeleteCustomer';
+// const baseURL = 'https://cors-anywhere.herokuapp.com/';
+ const baseURL='http://localhost:8000';
+// const saveURL = baseURL + 'https://us-central1-form-manager-7234f.cloudfunctions.net/saveCustomer';
+const saveURL = baseURL + '/customers/add';
+// const deleteURL = baseURL + 'https://us-central1-form-manager-7234f.cloudfunctions.net/deleteCustomer';
+const deleteURL = baseURL + '/customers/delete'
+// const undoDeleteURL = baseURL + 'https://us-central1-form-manager-7234f.cloudfunctions.net/undoDeleteCustomer';
+const undoDeleteURL = baseURL + '/customers/undoDelete';
 class EnquiryForm extends React.Component {
     state = {
         customerName: '',
@@ -29,13 +33,24 @@ class EnquiryForm extends React.Component {
         deletedCustomerIDIndex:'',
     };
     componentDidMount() {
-        let data=JSON.parse(localStorage.getItem('userData'));
-        if(data!==null){
-            this.setState({
-                data:data
-            });
-        }
+         // let data=JSON.parse(localStorage.getItem('userData'));
+        //
+        //  if(data!==null){
+        //     this.setState({
+        //         data:data
+        //     });
+        // }
+        this.fetchCustomerData();
     }
+    fetchCustomerData=async()=>{
+        let resp= await fetch("http://localhost:8000/customers");
+        let dataList= await resp.json();
+        console.log(dataList);
+        this.setState({
+            data:dataList??[]
+        })
+    }
+
     constructor(props) {
         super(props);
         this.handleInputChange=this.handleInputChange.bind(this);
@@ -163,7 +178,7 @@ class EnquiryForm extends React.Component {
         console.log("data before undo="+dataCopy);
         dataCopy.splice(this.state.deletedCustomerIDIndex,0,this.state.deletedCustomer);
         console.log("data after undo="+dataCopy);
-        localStorage.setItem('userData',JSON.stringify(dataCopy));
+        // localStorage.setItem('userData',JSON.stringify(dataCopy));
         this.setState({
             data:dataCopy,
         });
