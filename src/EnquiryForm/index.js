@@ -5,6 +5,7 @@ import { Select } from '@material-ui/core';
 import { MenuItem } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { CircularProgress} from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -182,6 +183,7 @@ class EnquiryForm extends React.Component {
         this.setState({
             data:dataCopy,
         });
+        this.handleClose();
     }
      handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -193,33 +195,34 @@ class EnquiryForm extends React.Component {
     }
     render() {
         return (
-            <div>
-                <form>
-                    <div>
-                        <TextField  label="Name" variant="outlined" type="text" name="customerName" value={this.state.customerName}
+            <div className={"form"}>
+                <form className={"form"}>
+                    <div className={"form-field"}>
+                        <TextField label="Name" variant="outlined" type="text" name="customerName" variant="outlined" value={this.state.customerName}
                                    onChange={this.handleInputChange}/>
                     </div>
-                    <div>
-                        <Select value={this.state.gender} onChange={this.handleInputChange} name="gender">
-                            <MenuItem value="Male">Male</MenuItem>
-                            <MenuItem value="Female">Female</MenuItem>
-                        </Select>
+                    <Select className={"form-field"} name="gender" value={this.state.gender}
+                            onChange={this.handleInputChange}>
+                        <MenuItem value="male">Male</MenuItem>
+                        <MenuItem value="female">Female</MenuItem>
+                    </Select>
+
+                    <div className={"form-field"}>
+                        <TextField placeholder="Phone Number" label="Phone Number" name="phoneNumber" variant="outlined" value={this.state.phoneNumber}
+                                   type="number"
+                                   onChange={this.handleInputChange}/>
                     </div>
-                    <div>
-                        <Input placeholder="Phone Number"  type="number" name="phoneNumber" value={this.state.phoneNumber} onChange={this.handleInputChange}/>
-                    </div>
+
+                    <Button variant="contained" color="grey" onClick={()=>{this.makePostRequest()}}>Save Info</Button>
+                    {this.state.isLoading && <div className={"form-field"}><CircularProgress color="secondary"/></div>}
                 </form>
-                <Button onClick={()=>{this.makePostRequest()}}>Save Info</Button>
-                <div>
-                    { this.state.isLoading?<CircularProgress />:<div></div>}
-                </div>
                 <div>
                     {(this.state.data.length!==0)&&<SimpleTable data={this.state.data} deleteUser={this.deleteUser}/>}
                 </div>
                 <Snackbar
                     anchorOrigin={{
                         vertical: 'bottom',
-                        horizontal: 'left',
+                        horizontal: 'center',
                     }}
                     open={this.state.openSnackBar}
                     autoHideDuration={6000}
