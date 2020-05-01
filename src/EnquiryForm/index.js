@@ -1,11 +1,11 @@
 import React from "react";
 import { Button } from '@material-ui/core';
-import { Input } from '@material-ui/core';
+
 import { Select } from '@material-ui/core';
 import { MenuItem } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { CircularProgress} from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
+
 
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -26,7 +26,7 @@ class EnquiryForm extends React.Component {
         phoneNumber:'',
         isLoading:false,
         customerID:'',
-        postRequestMade:false,
+
         data:[],
         openSnackBar:false,
         deletedCustomer:[],
@@ -99,7 +99,7 @@ class EnquiryForm extends React.Component {
 
         this.setState({
             isLoading:true,
-            postRequestMade:true,
+
         });
        console.log("making request");
        const requestOptions = {
@@ -216,7 +216,7 @@ class EnquiryForm extends React.Component {
                     <Button variant="contained" color="grey" onClick={()=>{this.makePostRequest()}}>Save Info</Button>
                     {this.state.isLoading && <div className={"form-field"}><CircularProgress color="secondary"/></div>}
                 </form>
-                <div>
+                <div class={"table"}>
                     {(this.state.data.length!==0)&&<SimpleTable data={this.state.data} deleteUser={this.deleteUser}/>}
                 </div>
                 <Snackbar
