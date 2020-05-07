@@ -52,3 +52,12 @@
 .table{
   margin-top: 20px;
 }
+.panel{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.panel[hidden] {
+  display: none;
+}

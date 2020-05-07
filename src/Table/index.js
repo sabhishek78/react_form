@@ -28,7 +28,7 @@ class SimpleTable extends React.Component {
                     </TableHead>
                     <TableBody>
                         {this.props.data.map((item) => (
-                           <Row rowData={item} key={item.customerID} deleteUser={this.props.deleteUser}/>
+                           <Row rowData={item} key={item._id} deleteUser={this.props.deleteUser}/>
                         ))}
                     </TableBody>
                 </Table>

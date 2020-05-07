@@ -12,14 +12,14 @@ class Row extends React.Component {
     render() {
         return (
             <TableRow >
-                <TableCell align="right">{this.props.rowData.customerID}</TableCell>
+                <TableCell align="right">{this.props.rowData._id}</TableCell>
                 <TableCell align="right">{this.props.rowData.customerName}</TableCell>
                 <TableCell align="right">{this.props.rowData.gender}</TableCell>
                 <TableCell align="right">{this.props.rowData.phoneNumber}</TableCell>
                 <TableCell align="right"><button name='Delete'onClick={()=>{
                     this.setState({deletePressed:true})
                     setTimeout(() => {
-                        this.props.deleteUser(this.props.rowData.customerID);
+                        this.props.deleteUser(this.props.rowData._id);
                         // this.setState({deletePressed:false});
                         }, 3000);
                 }}> {this.state.deletePressed?<CircularProgress/>: <DeleteIcon/>} </button></TableCell>

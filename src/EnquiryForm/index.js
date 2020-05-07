@@ -60,8 +60,6 @@ class EnquiryForm extends React.Component {
         this.setState({
             [event.target.name]:event.target.value
         })
-
-
     }
      allLetter(inputtxt)
     {   console.log(inputtxt);
@@ -109,12 +107,12 @@ class EnquiryForm extends React.Component {
         };
         const response = await fetch(saveURL, requestOptions);
         const responseJSON = await response.json();
-        console.log(responseJSON);
+        console.log("response is ="+responseJSON);
         this.setState({
             isLoading:false,
         });
         let currentUserData={"customerName":this.state.customerName,"gender":this.state.gender,"phoneNumber":this.state.phoneNumber
-            ,"customerID":responseJSON['customerID']};
+            ,"_id":responseJSON};
         console.log("current user data="+currentUserData);
        let dataCopy=this.state.data.slice();
         console.log(" previous data local storage="+dataCopy);
@@ -132,6 +130,7 @@ class EnquiryForm extends React.Component {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({customerID: customerID})
         };
+        // console.log('request options='+JSON.stringify(requestOptions));
         const response = await fetch(deleteURL, requestOptions);
         const responseJSON = await response.json();
         console.log('delete response=');
