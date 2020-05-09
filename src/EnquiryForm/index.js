@@ -11,6 +11,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import SimpleTable from "../Table";
+
 // const baseURL = 'https://cors-anywhere.herokuapp.com/';
  const baseURL='http://localhost:8000';
 // const saveURL = baseURL + 'https://us-central1-form-manager-7234f.cloudfunctions.net/saveCustomer';
@@ -22,11 +23,11 @@ const undoDeleteURL = baseURL + '/customers/undoDelete';
 class EnquiryForm extends React.Component {
     state = {
         customerName: '',
-        gender:"Male",
+        gender:"male",
         phoneNumber:'',
         isLoading:false,
         customerID:'',
-
+        owner:'',
         data:[],
         openSnackBar:false,
         deletedCustomer:[],
@@ -44,7 +45,11 @@ class EnquiryForm extends React.Component {
         this.fetchCustomerData();
     }
     fetchCustomerData=async()=>{
-        let resp= await fetch("http://localhost:8000/customers");
+        let resp= await fetch("http://localhost:8000/customers",{credentials:"include"});
+        if(resp.status===403 ){
+            this.props.history.push('/');
+            return;
+        }
         let dataList= await resp.json();
         console.log(dataList);
         this.setState({
@@ -85,15 +90,15 @@ class EnquiryForm extends React.Component {
         return true;
     }
     async makePostRequest() {
-        if(!(this.allLetter(this.state.customerName))){
-            console.log("invalid name");
-
-            return;
-        }
-        if(!(this.phonenumber(this.state.phoneNumber))){
-            console.log("invalid phone number")
-            return;
-        }
+        // if(!(this.allLetter(this.state.customerName))){
+        //     console.log("invalid name");
+        //
+        //     return;
+        // }
+        // if(!(this.phonenumber(this.state.phoneNumber))){
+        //     console.log("invalid phone number")
+        //     return;
+        // }
 
         this.setState({
             isLoading:true,
@@ -103,7 +108,8 @@ class EnquiryForm extends React.Component {
        const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(this.state)
+            body: JSON.stringify(this.state),
+           credentials:"include",
         };
         const response = await fetch(saveURL, requestOptions);
         const responseJSON = await response.json();
@@ -115,10 +121,10 @@ class EnquiryForm extends React.Component {
             ,"_id":responseJSON};
         console.log("current user data="+currentUserData);
        let dataCopy=this.state.data.slice();
-        console.log(" previous data local storage="+dataCopy);
+        // console.log(" previous data local storage="+dataCopy);
         dataCopy.push(currentUserData);
-        console.log(" updated data local storage="+dataCopy);
-        localStorage.setItem('userData',JSON.stringify(dataCopy));
+        // console.log(" updated data local storage="+dataCopy);
+        // localStorage.setItem('userData',JSON.stringify(dataCopy));
         this.setState({
             data:dataCopy
         });

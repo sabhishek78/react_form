@@ -61,3 +61,10 @@
 .panel[hidden] {
   display: none;
 }
+.appBarRow{
+  display: flex;
+ flex-direction: row;
+ align-content: space-between;
+  margin: 15px;
+  width: 250px;
+}
