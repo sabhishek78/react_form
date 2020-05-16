@@ -117,7 +117,8 @@ class LoginSignUp extends React.Component {
         };
         const response = await fetch(loginURL, requestOptions);
         const responseJSON = await response.json();
-        console.log("response is =" + responseJSON);
+        console.log("response is =");
+        console.log(responseJSON);
         this.setState({
             isLoading: false,
         });
@@ -130,7 +131,7 @@ class LoginSignUp extends React.Component {
             this.setState({
                 status:"Login Successful ",
             });
-            // this.props.updateLoginStatus("LogOut");
+             this.props.changeLoginStatus();
             this.props.history.push('/customers');
         }
         else if(responseJSON.status==="passwordsDoNotMatch"){
@@ -164,24 +165,24 @@ class LoginSignUp extends React.Component {
                         </Tabs>
                         <div  hidden={this.state.value!==0} className={"panel"}>
                             <h1>Login</h1>
-                            <text>Already have an account</text>
-                            <TextField label="Name" variant="outlined" type="text" name="customerName" variant="outlined" value={this.state.customerName}
+                            <text style={{margin:'10px'}}>Already have an account</text>
+                            <TextField style={{margin:'10px'}} label="Name" variant="outlined" type="text" name="customerName" variant="outlined" value={this.state.customerName}
                                        onChange={this.handleInputChange}/>
-                            <TextField label="Password" variant="outlined" type="password" name="password" variant="outlined" value={this.state.password}
+                            <TextField style={{margin:'10px'}} label="Password" variant="outlined" type="password" name="password" variant="outlined" value={this.state.password}
                                        onChange={this.handleInputChange}/>
-                            <Button variant="contained" color="grey" onClick={()=>{this.login()}}>Login</Button>
+                            <Button style={{margin:'10px'}} variant="contained" color="grey" onClick={()=>{this.login()}}>Login</Button>
 
                         </div>
                         <div  hidden={this.state.value!==1} className={"panel"}>
                             <h1>Signup</h1>
-                            <text>Create a new account</text>
-                            <TextField label="Name" variant="outlined" type="text" name="customerName" variant="outlined" value={this.state.customerName}
+                            <text style={{margin:'10px'}}>Create a new account</text>
+                            <TextField style={{margin:'10px'}} label="Name" variant="outlined" type="text" name="customerName" variant="outlined" value={this.state.customerName}
                                        onChange={this.handleInputChange}/>
-                            <TextField label="Password" variant="outlined" type="password" name="password" variant="outlined" value={this.state.password}
+                            <TextField style={{margin:'10px'}} label="Password" variant="outlined" type="password" name="password" variant="outlined" value={this.state.password}
                                        onChange={this.handleInputChange}/>
-                            <TextField label="Confirm Password" variant="outlined" type="password" name="confirmPassword" variant="outlined" value={this.state.confirmPassword}
+                            <TextField style={{margin:'10px'}} label="Confirm Password" variant="outlined" type="password" name="confirmPassword" variant="outlined" value={this.state.confirmPassword}
                                        onChange={this.handleInputChange}/>
-                            <Button variant="contained" color="grey" onClick={()=>{this.signUp()}}>Sign Up</Button>
+                            <Button style={{margin:'10px'}} variant="contained" color="grey" onClick={()=>{this.signUp()}}>Sign Up</Button>
                         </div>
                         <div>{this.state.status}</div>
                         <Snackbar

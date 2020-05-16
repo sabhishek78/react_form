@@ -37,10 +37,12 @@
   }
 }
 .form{
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
 }
 .form-field{
   display: flex;
@@ -61,10 +63,11 @@
 .panel[hidden] {
   display: none;
 }
-.appBarRow{
-  display: flex;
- flex-direction: row;
- align-content: space-between;
-  margin: 15px;
-  width: 250px;
+
+.toolBar{
+  justify-content: space-between;
+}
+.title{
+  display:flex;
+  flex-direction: row;
 }
