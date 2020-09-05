@@ -99,7 +99,6 @@ class EnquiryForm extends React.Component {
         //     console.log("invalid phone number")
         //     return;
         // }
-
         this.setState({
             isLoading:true,
 
